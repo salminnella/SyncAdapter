@@ -9,18 +9,24 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import anthony.example.com.syncadapterlab.model.StockAPIService;
+import anthony.example.com.syncadapterlab.model.StockQuote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     // Constants
+    private static final String TAG = "MainActivity";
     // Content provider authority
     public static final String AUTHORITY = "siu.example.com.syncadapter.StubProvider";
     // Account type
@@ -31,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Account mAccount;
 
     Button syncButton;
+    Button manualSyncButton;
 
     // Global variables
     // A content resolver for accessing the provider
@@ -47,16 +54,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
         mAccount = createSyncAccount(this);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json")
+                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         mService = retrofit.create(StockAPIService.class);
 
+        initClickListeners();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +88,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void initClickListeners() {
+        manualSyncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<StockQuote> call = mService.getCompany("NFLX");
+
+                call.enqueue(new Callback<StockQuote>() {
+                    @Override
+                    public void onResponse(Call<StockQuote> call, Response<StockQuote> response) {
+                        Log.i(TAG, "onResponse: " + response.body().getLastPrice());
+                    }
+
+                    @Override
+                    public void onFailure(Call<StockQuote> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override
