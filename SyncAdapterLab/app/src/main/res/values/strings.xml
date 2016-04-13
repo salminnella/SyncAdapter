@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">SyncAdapterLab</string>
     <string name="action_settings">Settings</string>
+    <string name="company_name">Company name:</string>
+    <string name="manually_sync">Manually sync the stocks</string>
+    <string name="auto_sync_every_min">Automatically sync the stocks every minute</string>
+    <string name="auto_sync_five_min">Automatically sync the stocks every 5 minutes</string>
+    <string name="stock_price">Last Stock Price</string>
 </resources>
