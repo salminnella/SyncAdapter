@@ -36,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
     Account mAccount;
 
-    Button syncButton;
+    Button syncAutoMinuteButton;
     Button manualSyncButton;
+    Button syncAutoFiveMinuteButton;
 
     // Global variables
     // A content resolver for accessing the provider
-   // ContentResolver mResolver;
+    // ContentResolver mResolver;
 
     public StockAPIService mService;
 
@@ -55,44 +56,91 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
+        syncAutoMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
+        syncAutoFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
+
+        setSyncEveryMinuteButton();
+        setSyncEveryFiveMinuteButton();
+        setManualSyncButton();
+
+
         mAccount = createSyncAccount(this);
 
-        /*Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        mService = retrofit.create(StockAPIService.class); */
+        mService = retrofit.create(StockAPIService.class);
 
-        initClickListeners();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    Bundle settingsBundle = new Bundle();
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                    ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
+
+                }
+            });
+        }
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 5);
+
+    }
+
+    private void setSyncEveryFiveMinuteButton() {
+        syncAutoFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
                 Bundle settingsBundle = new Bundle();
                 settingsBundle.putBoolean(
                         ContentResolver.SYNC_EXTRAS_MANUAL, true);
                 settingsBundle.putBoolean(
                         ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                /*
-                 * Request the sync for the default account, authority, and
-                 * manual sync settings
-                 */
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
                 ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
 
             }
         });
-       /* ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount,AUTHORITY,Bundle.EMPTY,60);
-*/
+    }
+
+    private void setSyncEveryMinuteButton() {
+        syncAutoMinuteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
+            }
+        });
 
     }
 
-    private void initClickListeners() {
+    private void setManualSyncButton() {
         manualSyncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,34 +161,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    /**d
-     * Create a new dummy account for the sync adapter
-     *
-     * @param context The application context
-     */
     public static Account createSyncAccount(Context context) {
         // Create the account type and default account
         Account newAccount = new Account(
@@ -169,6 +190,37 @@ public class MainActivity extends AppCompatActivity {
         return newAccount;
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * d
+     * Create a new dummy account for the sync adapter
+     *
+     * @param context The application context
+     */
 
 
 }
