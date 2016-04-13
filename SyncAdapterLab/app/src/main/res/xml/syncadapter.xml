@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="anthony.example.com.syncadapterlab.StubProvider"
+    android:contentAuthority="anthony.example.com.syncadapterlab.sync_adapter.StubProvider"
     android:accountType="example.com"
     android:userVisible="false"
     android:supportsUploading="true"

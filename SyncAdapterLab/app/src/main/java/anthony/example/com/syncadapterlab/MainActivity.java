@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     // Constants
     private static final String TAG = "MainActivity";
     // Content provider authority
-    public static final String AUTHORITY = "siu.example.com.syncadapter.StubProvider";
+    public static final String AUTHORITY = "anthony.example.com.syncadapterlab.sync_adapter.StubProvider";
     // Account type
     public static final String ACCOUNT_TYPE = "example.com";
     // Account
@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Global variables
     // A content resolver for accessing the provider
-    ContentResolver mResolver;
+   // ContentResolver mResolver;
 
-    StockAPIService mService;
+    public StockAPIService mService;
 
 
     @Override
@@ -57,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
         manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
         mAccount = createSyncAccount(this);
 
-        Retrofit retrofit = new Retrofit.Builder()
+        /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        mService = retrofit.create(StockAPIService.class);
+        mService = retrofit.create(StockAPIService.class); */
 
         initClickListeners();
 
@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+       /* ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount,AUTHORITY,Bundle.EMPTY,60);
+*/
 
     }
 
