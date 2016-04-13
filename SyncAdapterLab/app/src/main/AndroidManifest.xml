@@ -25,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".sync_adapter.AuthenticatorService">
+            android:name="anthony.example.com.syncadapterlab.sync_adapter.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -35,7 +35,7 @@
         </service>
 
         <service
-            android:name=".sync_adapter.SyncService">
+            android:name="anthony.example.com.syncadapterlab.sync_adapter.SyncService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
@@ -45,8 +45,10 @@
         </service>
 
         <provider
-            android:name=".sync_adapter.StubProvider"
-            android:authorities="anthony.example.com.syncadapterlab.provider"
+
+            android:name="anthony.example.com.syncadapterlab.sync_adapter.StubProvider"
+            android:authorities="anthony.example.com.syncadapterlab.sync_adapter.StubProvider"
+            android:label="my provider"
             android:exported="false"
             android:syncable="true"/>
 

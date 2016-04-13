@@ -8,12 +8,25 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
+
+import anthony.example.com.syncadapterlab.MainActivity;
+import anthony.example.com.syncadapterlab.model.StockAPIService;
+import anthony.example.com.syncadapterlab.model.StockQuote;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
     ContentResolver mContentResolver;
+    public StockAPIService mService;
+    private static final String TAG = "SyncAdapter";
+
 
     /**
      * Set up the sync adapter
@@ -49,6 +62,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        Log.i(TAG, "onPerformSync: =========");
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
+        mService = retrofit.create(StockAPIService.class);
+        Call<StockQuote> call = mService.getCompany("NFLX");
+
+        call.enqueue(new Callback<StockQuote>() {
+            @Override
+            public void onResponse(Call<StockQuote> call, Response<StockQuote> response) {
+                Log.i(TAG, "onResponse: " + response.body().getLastPrice());
+            }
+
+            @Override
+            public void onFailure(Call<StockQuote> call, Throwable t) {
+
+            }
+        });
     }
 }
