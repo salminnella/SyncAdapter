@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="Bundled (Maven 3)" />
       </MavenGeneralSettings>
 =======
+>>>>>>> master
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -32,7 +35,10 @@
           <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
         </list>
       </value>
+<<<<<<< HEAD
+=======
 >>>>>>> 5175b55f3dec48576a6adb930cfdb8021bfda9a4
+>>>>>>> master
     </option>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
