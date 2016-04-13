@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote")
+                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
