@@ -14,8 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import anthony.example.com.syncadapterlab.model.StockAPIService;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class MainActivity extends AppCompatActivity {
 
     // Constants
     // Content provider authority
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     // A content resolver for accessing the provider
     ContentResolver mResolver;
 
+    StockAPIService mService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         mAccount = createSyncAccount(this);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mService = retrofit.create(StockAPIService.class);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @Override
