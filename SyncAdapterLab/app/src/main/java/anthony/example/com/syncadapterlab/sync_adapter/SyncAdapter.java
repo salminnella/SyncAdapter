@@ -10,11 +10,10 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import anthony.example.com.syncadapterlab.MainActivity;
+import java.io.IOException;
+
 import anthony.example.com.syncadapterlab.model.StockAPIService;
 import anthony.example.com.syncadapterlab.model.StockQuote;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -69,18 +68,59 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             .build();
 
         mService = retrofit.create(StockAPIService.class);
-        Call<StockQuote> call = mService.getCompany("NFLX");
 
-        call.enqueue(new Callback<StockQuote>() {
-            @Override
-            public void onResponse(Call<StockQuote> call, Response<StockQuote> response) {
-                Log.i(TAG, "onResponse: " + response.body().getLastPrice());
-            }
+//        Call<StockQuote> call = mService.getCompany("NFLX");
+//        call.enqueue(new Callback<StockQuote>() {
+//            @Override
+//            public void onResponse(Call<StockQuote> call, Response<StockQuote> response) {
+//                Log.i(TAG, "onResponse: " + response.body().getLastPrice());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<StockQuote> call, Throwable t) {
+//
+//            }
+//        });
 
-            @Override
-            public void onFailure(Call<StockQuote> call, Throwable t) {
+        //get Quotes for Netflix
+        try {
+            Response<StockQuote> response = mService.getCompany("NFLX").execute();
+            Log.i(TAG, "onResponse: name is " + response.body().getName() + " last price is " +response.body().getLastPrice());
 
-            }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get Quotes for Apple
+        try {
+           Response<StockQuote> response = mService.getCompany("AAPL").execute();
+            Log.i(TAG, "onResponse: name is " + response.body().getName() + " last price is " +response.body().getLastPrice());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get Quotes for Google
+        try {
+            Response<StockQuote> response = mService.getCompany("GOOGL").execute();
+            Log.i(TAG, "onResponse: name is " + response.body().getName() + " last price is " +response.body().getLastPrice());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get Quotes for facebook
+        try {
+            Response<StockQuote> response = mService.getCompany("FB").execute();
+            Log.i(TAG, "onResponse: name is " + response.body().getName() + " last price is " +response.body().getLastPrice());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get Quotes for Microsoft
+        try {
+            Response<StockQuote> response = mService.getCompany("MSFT").execute();
+            Log.i(TAG, "onResponse: name is " + response.body().getName() + " last price is " +response.body().getLastPrice());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

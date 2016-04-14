@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import anthony.example.com.syncadapterlab.model.StockAPIService;
 import anthony.example.com.syncadapterlab.model.StockQuote;
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     Button syncAutoMinuteButton;
     Button manualSyncButton;
     Button syncAutoFiveMinuteButton;
+    TextView companyName;
+    TextView companyLastPrice;
+    ProgressBar progressBar;
 
     // Global variables
     // A content resolver for accessing the provider
@@ -58,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
         syncAutoMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
         syncAutoFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
+        companyName = (TextView) findViewById(R.id.company_name_text_view);
+        companyLastPrice = (TextView) findViewById(R.id.last_stock_price_text_view);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         setSyncEveryMinuteButton();
         setSyncEveryFiveMinuteButton();
@@ -96,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 5);
+//        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+//        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 5);
 
     }
 
@@ -114,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
                      * Request the sync for the default account, authority, and
                      * manual sync settings
                      */
-                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+                //ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+                ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 300);
 
             }
         });
@@ -134,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                      * manual sync settings
                      */
                 ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+                ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 60);
 
             }
         });
@@ -144,17 +154,20 @@ public class MainActivity extends AppCompatActivity {
         manualSyncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 Call<StockQuote> call = mService.getCompany("NFLX");
 
                 call.enqueue(new Callback<StockQuote>() {
                     @Override
                     public void onResponse(Call<StockQuote> call, Response<StockQuote> response) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         Log.i(TAG, "onResponse: " + response.body().getLastPrice());
+                        companyName.setText(response.body().getName());
+                        companyLastPrice.setText( String.valueOf(response.body().getLastPrice()));
                     }
 
                     @Override
                     public void onFailure(Call<StockQuote> call, Throwable t) {
-
                     }
                 });
             }
@@ -213,14 +226,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    /**
-     * d
-     * Create a new dummy account for the sync adapter
-     *
-     * @param context The application context
-     */
-
-
 }
