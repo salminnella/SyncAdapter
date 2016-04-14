@@ -36,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
     Account mAccount;
 
-    Button syncAutoMinuteButton;
+    Button AutoSyncEveryMinuteButton;
     Button manualSyncButton;
-    Button syncAutoFiveMinuteButton;
+    Button autoSyncEveryFiveMinuteButton;
+    FloatingActionButton fab;
 
     // Global variables
     // A content resolver for accessing the provider
@@ -55,13 +56,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
-        syncAutoMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
-        syncAutoFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
+        AutoSyncEveryMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
+        autoSyncEveryFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
+
 
         setSyncEveryMinuteButton();
         setSyncEveryFiveMinuteButton();
         setManualSyncButton();
+        setSyncEveryThirtySekFabButton();
 
 
         mAccount = createSyncAccount(this);
@@ -74,12 +79,14 @@ public class MainActivity extends AppCompatActivity {
         mService = retrofit.create(StockAPIService.class);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    }
+
+    private void setSyncEveryThirtySekFabButton() {
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Auto Sync Stocks every 30 sek", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     Bundle settingsBundle = new Bundle();
                     settingsBundle.putBoolean(
@@ -97,47 +104,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 5);
-
-    }
-
-    private void setSyncEveryFiveMinuteButton() {
-        syncAutoFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                    /*
-                     * Request the sync for the default account, authority, and
-                     * manual sync settings
-                     */
-                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
-            }
-        });
-    }
-
-    private void setSyncEveryMinuteButton() {
-        syncAutoMinuteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                    /*
-                     * Request the sync for the default account, authority, and
-                     * manual sync settings
-                     */
-                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
-            }
-        });
-
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 30);
     }
 
     private void setManualSyncButton() {
@@ -161,6 +128,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    private void setSyncEveryMinuteButton() {
+        AutoSyncEveryMinuteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
+            }
+        });
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 60);
+    }
+
+
+    private void setSyncEveryFiveMinuteButton() {
+        autoSyncEveryFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(
+                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
+            }
+        });
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 300);
+    }
+
+
+    /**
+     * d
+     * Create a new dummy account for the sync adapter
+     *
+     * @param context The application context
+     */
 
     public static Account createSyncAccount(Context context) {
         // Create the account type and default account
@@ -191,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -213,14 +230,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    /**
-     * d
-     * Create a new dummy account for the sync adapter
-     *
-     * @param context The application context
-     */
 
 
 }
