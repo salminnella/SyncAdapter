@@ -36,10 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     Account mAccount;
 
-    Button AutoSyncEveryMinuteButton;
+    Button autoSyncEveryMinuteButton;
     Button manualSyncButton;
     Button autoSyncEveryFiveMinuteButton;
-    FloatingActionButton fab;
 
     // Global variables
     // A content resolver for accessing the provider
@@ -54,15 +53,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
-        AutoSyncEveryMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
-        autoSyncEveryFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
 
-        setSyncEveryMinuteButton();
-        setSyncEveryFiveMinuteButton();
-        setManualSyncButton();
-        setSyncEveryThirtySekFabButton();
+        autoSyncEveryMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
+        autoSyncEveryFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
+        manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
+
+        setSyncEveryMinute();
+        setSyncEveryFiveMinute();
+        setManualSync();
 
         mAccount = createSyncAccount(this);
 
@@ -72,15 +70,42 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mService = retrofit.create(StockAPIService.class);
-    }
 
-    private void setSyncEveryThirtySekFabButton() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Auto Sync Stocks every 30 sek", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    Bundle settingsBundle = new Bundle();
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                    ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+
+
+                }
+            });
+        }
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 30);
+
+    }
+
+
+
+    private void setSyncEveryMinute() {
+        if (autoSyncEveryMinuteButton!= null) {
+            autoSyncEveryMinuteButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
                     Bundle settingsBundle = new Bundle();
                     settingsBundle.putBoolean(
                             ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -95,10 +120,35 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 30);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 60);
     }
 
-    private void setManualSyncButton() {
+    private void setSyncEveryFiveMinute() {
+        if (autoSyncEveryFiveMinuteButton!= null) {
+            autoSyncEveryFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle settingsBundle = new Bundle();
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                    settingsBundle.putBoolean(
+                            ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    /*
+                     * Request the sync for the default account, authority, and
+                     * manual sync settings
+                     */
+                    ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+                }
+            });
+        }
+
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 300);
+    }
+
+
+
+    private void setManualSync() {
         manualSyncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,45 +169,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setSyncEveryMinuteButton() {
-        AutoSyncEveryMinuteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                    /*
-                     * Request the sync for the default account, authority, and
-                     * manual sync settings
-                     */
-                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-            }
-        });
-        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 60);
-    }
-
-    private void setSyncEveryFiveMinuteButton() {
-        autoSyncEveryFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                settingsBundle.putBoolean(
-                        ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                    /*
-                     * Request the sync for the default account, authority, and
-                     * manual sync settings
-                     */
-                ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-            }
-        });
-        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 300);
-    }
 
 
     /**

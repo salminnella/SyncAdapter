@@ -41,7 +41,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
 
-
     /**
      * Set up the sync adapter. This form of the
      * constructor maintains compatibility with Android 3.0
@@ -64,9 +63,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "onPerformSync: =========");
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("http://dev.markitondemand.com/MODApis/Api/v2/Quote/")
+                .build();
 
         mService = retrofit.create(StockAPIService.class);
         Call<StockQuote> call = mService.getCompany("NFLX");
