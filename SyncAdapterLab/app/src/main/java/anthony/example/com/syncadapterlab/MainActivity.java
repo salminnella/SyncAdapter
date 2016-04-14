@@ -44,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
     // Global variables
     // A content resolver for accessing the provider
     // ContentResolver mResolver;
-
     public StockAPIService mService;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +54,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         manualSyncButton = (Button) findViewById(R.id.btn_manually_sync);
         AutoSyncEveryMinuteButton = (Button) findViewById(R.id.btn_auto_sync_every_min);
         autoSyncEveryFiveMinuteButton = (Button) findViewById(R.id.btn_auto_sync_five_min);
 
-
         setSyncEveryMinuteButton();
         setSyncEveryFiveMinuteButton();
         setManualSyncButton();
         setSyncEveryThirtySekFabButton();
-
 
         mAccount = createSyncAccount(this);
 
@@ -77,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mService = retrofit.create(StockAPIService.class);
-
-
     }
 
     private void setSyncEveryThirtySekFabButton() {
@@ -98,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
                      * manual sync settings
                      */
                     ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
-
                 }
             });
         }
@@ -128,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void setSyncEveryMinuteButton() {
         AutoSyncEveryMinuteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,13 +133,11 @@ public class MainActivity extends AppCompatActivity {
                      * manual sync settings
                      */
                 ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
             }
         });
         ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 60);
     }
-
 
     private void setSyncEveryFiveMinuteButton() {
         autoSyncEveryFiveMinuteButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                      * manual sync settings
                      */
                 ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-
             }
         });
         ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
@@ -194,10 +181,8 @@ public class MainActivity extends AppCompatActivity {
          */
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
           /*
-           * If you don't set android:syncable="true" in
-           * in your <provider> element in the manifest,
-           * then call context.setIsSyncable(account, AUTHORITY, 1)
-           * here.
+           * If you don't set android:syncable="true" in your <provider> element in the manifest,
+           * then call context.setIsSyncable(account, AUTHORITY, 1) here.
            */
         } else {
             /*
@@ -207,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return newAccount;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
